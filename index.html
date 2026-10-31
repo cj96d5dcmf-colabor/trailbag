@@ -88,17 +88,17 @@
 
     .weight-summary {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding: 16px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 12px 16px;
       background-color: var(--bg-dark);
     }
 
     .weight-card {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 10px;
+      padding: 10px 6px;
       text-align: center;
     }
 
@@ -107,21 +107,21 @@
     }
 
     .weight-label {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .weight-value {
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--text-main);
     }
 
     .weight-value span {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--accent-green);
     }
 
@@ -151,11 +151,11 @@
       letter-spacing: 0.5px;
     }
 
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 8px;
+    .catalog-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .catalog-select {
@@ -165,8 +165,37 @@
       color: var(--text-main);
       padding: 10px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       outline: none;
+    }
+
+    /* Contenedor de Botones Visuales de Marcas (Estilo Logo Comercial) */
+    .brand-grid-visual {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .brand-logo-btn {
+      background-color: var(--input-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 12px 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+
+    .brand-logo-btn.selected {
+      background-color: var(--accent-green);
+      color: var(--bg-dark);
+      border-color: var(--accent-green);
     }
 
     .btn-add-preset {
@@ -179,6 +208,7 @@
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
+      margin-top: 8px;
     }
 
     .category-scroll {
@@ -419,8 +449,12 @@
 
   <section class="weight-summary">
     <div class="weight-card">
-      <div class="weight-label" id="lbl-base-weight">Peso Base</div>
+      <div class="weight-label" id="lbl-base-weight">Peso Material</div>
       <div class="weight-value"><span id="val-base-weight">0</span> <span>g</span></div>
+    </div>
+    <div class="weight-card">
+      <div class="weight-label" id="lbl-nutri-weight">Peso Nutrición</div>
+      <div class="weight-value"><span id="val-nutri-weight">0</span> <span>g</span></div>
     </div>
     <div class="weight-card highlight">
       <div class="weight-label" id="lbl-total-weight">Peso Total</div>
@@ -428,27 +462,29 @@
     </div>
   </section>
 
+  <!-- PESTAÑA 1: MOCHILA Y MATERIAL -->
   <main id="view-mochila" class="view-content active">
+    
     <div class="brand-catalog-card">
-      <div class="brand-catalog-title" id="lbl-brand-catalog">🏷️ Catálogo de Marcas Top</div>
-      <div class="catalog-grid">
-        <select class="catalog-select" id="select-brand" onchange="loadBrandProducts()">
-          <option value="">-- Marca --</option>
-          <option value="Salomon">Salomon</option>
-          <option value="RaidLight">RaidLight</option>
-          <option value="Compressport">Compressport</option>
-          <option value="Petzl">Petzl</option>
-          <option value="226ERS">226ERS</option>
-          <option value="Maurten">Maurten</option>
-          <option value="Fanté">Fanté</option>
-          <option value="Naäk">Naäk</option>
-          <option value="SiS">SiS</option>
+      <div class="brand-catalog-title" id="lbl-gear-catalog">🎒 Catálogo de Material & Equipamiento</div>
+      <div class="catalog-stack">
+        <select class="catalog-select" id="select-gear-category" onchange="onGearCategoryChange()">
+          <option value="">1. Elige Tipo de Equipamiento...</option>
+          <option value="mochilas">🎒 Mochilas y Chalecos</option>
+          <option value="ropa">🧥 Ropa y Chaquetas Impermeables</option>
+          <option value="seguridad">🔦 Frontales y Seguridad</option>
+          <option value="hidratacion_hardware">💧 Bidones y Bolsas (Vacíos)</option>
+          <option value="bastones">🥢 Bastones de Trekking</option>
         </select>
-        <select class="catalog-select" id="select-product">
-          <option value="">-- Elige Modelo --</option>
+
+        <!-- Cuadrícula Visual de Marcas con Logo Estilizado -->
+        <div class="brand-grid-visual" id="gear-brand-grid"></div>
+
+        <select class="catalog-select" id="select-gear-model" disabled>
+          <option value="">3. Elige Modelo Específico...</option>
         </select>
       </div>
-      <button class="btn-add-preset" onclick="addPresetItem()" id="btn-add-preset">+ Añadir a Mochila</button>
+      <button class="btn-add-preset" onclick="addGearItem()" id="btn-add-gear">+ Añadir Equipamiento</button>
     </div>
 
     <div class="category-scroll">
@@ -456,16 +492,38 @@
       <button class="cat-pill" onclick="filterCategory('ropa')" id="cat-ropa">Ropa & Abrigo</button>
       <button class="cat-pill" onclick="filterCategory('seguridad')" id="cat-seguridad">Seguridad</button>
       <button class="cat-pill" onclick="filterCategory('hidratacion')" id="cat-hidratacion">Hidratación</button>
-      <button class="cat-pill" onclick="filterCategory('nutricion')" id="cat-nutricion">Nutrición</button>
       <button class="cat-pill" onclick="filterCategory('bastones')" id="cat-bastones">Bastones/Varios</button>
     </div>
 
     <div class="item-list" id="equipment-container"></div>
 
-    <button class="add-item-btn" onclick="addNewItemPrompt()" id="btn-add-item">+ Añadir Nuevo Elemento</button>
+    <button class="add-item-btn" onclick="addNewItemPrompt(false)" id="btn-add-item">+ Añadir Material Personalizado</button>
   </main>
 
+  <!-- PESTAÑA 2: NUTRICIÓN -->
   <main id="view-nutricion" class="view-content">
+    
+    <div class="brand-catalog-card">
+      <div class="brand-catalog-title" id="lbl-nutri-catalog">⚡ Catálogo de Nutrición Deportiva</div>
+      <div class="catalog-stack">
+        <select class="catalog-select" id="select-nutri-category" onchange="onNutriCategoryChange()">
+          <option value="">1. Elige Tipo de Suplemento...</option>
+          <option value="geles">🧪 Geles Energéticos</option>
+          <option value="barritas">🍫 Barritas Energéticas</option>
+          <option value="bebidas">🥤 Bebidas e Hidratos en Polvo</option>
+          <option value="sales">🧂 Sales y Electrolitos</option>
+        </select>
+
+        <!-- Cuadrícula Visual de Marcas de Nutrición -->
+        <div class="brand-grid-visual" id="nutri-brand-grid"></div>
+
+        <select class="catalog-select" id="select-nutri-model" disabled>
+          <option value="">3. Elige Producto / Gel...</option>
+        </select>
+      </div>
+      <button class="btn-add-preset" onclick="addNutriItem()" id="btn-add-nutri">+ Añadir Nutrición a la Carga</button>
+    </div>
+
     <div class="nutrition-results">
       <div class="form-group">
         <label id="lbl-user-weight">Peso del Corredor (kg):</label>
@@ -482,7 +540,7 @@
 
       <div class="nutri-grid">
         <div class="nutri-box">
-          <div class="nutri-title" id="lbl-carbs">Carbohidratos</div>
+          <div class="nutri-title" id="lbl-carbs">CH Objetivo</div>
           <div class="nutri-val"><span id="val-carbs">60</span> <small>g/h</small></div>
         </div>
         <div class="nutri-box">
@@ -523,120 +581,283 @@
     </button>
   </nav>
   <script>
-    const brandCatalog = {
-      "Salomon": [
-        { name: "Mochila Sense Pro 5", weight: 144, category: "bastones", consumable: false },
-        { name: "Chaqueta Bonatti Trail", weight: 195, category: "ropa", consumable: false },
-        { name: "Soft Flask 500ml", weight: 35, category: "hidratacion", consumable: false }
-      ],
-      "RaidLight": [
-        { name: "Chaqueta Ultralight MP+", weight: 150, category: "ropa", consumable: false },
-        { name: "Mochila Responsiv 12L", weight: 200, category: "bastones", consumable: false }
-      ],
-      "Compressport": [
-        { name: "Ultralight Pack 10L", weight: 117, category: "bastones", consumable: false }
-      ],
-      "Petzl": [
-        { name: "Frontal Nao RL", weight: 145, category: "seguridad", consumable: false },
-        { name: "Frontal Swift RL", weight: 100, category: "seguridad", consumable: false }
-      ],
-      "226ERS": [
-        { name: "High Energy Gel (50g CH)", weight: 76, category: "nutricion", consumable: true, carbs: 50, sodium: 250 },
-        { name: "Isotonic Gel (22g CH)", weight: 68, category: "nutricion", consumable: true, carbs: 22, sodium: 100 }
-      ],
-      "Maurten": [
-        { name: "GEL 100 (25g CH)", weight: 40, category: "nutricion", consumable: true, carbs: 25, sodium: 20 },
-        { name: "GEL 160 (40g CH)", weight: 65, category: "nutricion", consumable: true, carbs: 40, sodium: 30 }
-      ],
-      "Fanté": [
-        { name: "GEL GLUT 5 (80g CH)", weight: 100, category: "nutricion", consumable: true, carbs: 80, sodium: 350 }
-      ],
-      "Naäk": [
-        { name: "Ultra Energy Gel (27g CH)", weight: 50, category: "nutricion", consumable: true, carbs: 27, sodium: 140 },
-        { name: "Ultra Energy Bar (28g CH)", weight: 50, category: "nutricion", consumable: true, carbs: 28, sodium: 160 }
-      ],
-      "SiS": [
-        { name: "GO Isotonic Gel (22g CH)", weight: 60, category: "nutricion", consumable: true, carbs: 22, sodium: 10 }
-      ]
+    const gearCatalog = {
+      mochilas: {
+        "SALOMON": [
+          { name: "Sense Pro 5", weight: 144 },
+          { name: "Active Skin 8", weight: 213 },
+          { name: "Adv Skin 12", weight: 275 },
+          { name: "S/Lab Ultra 10", weight: 115 },
+          { name: "Active Skin 4", weight: 202 }
+        ],
+        "NNORMAL": [
+          { name: "Race Vest 5L", weight: 150 },
+          { name: "Trail Pack 10L", weight: 220 }
+        ],
+        "RAIDLIGHT": [
+          { name: "Responsiv 12L", weight: 200 },
+          { name: "Responsiv 6L", weight: 190 },
+          { name: "Ultravest 24L", weight: 310 },
+          { name: "Gilet Responsiv 18L", weight: 280 }
+        ],
+        "COMPRESSPORT": [
+          { name: "Ultralight Pack 10L", weight: 117 },
+          { name: "Free Belt Pro (Cinturón)", weight: 38 },
+          { name: "Free Belt Regular", weight: 30 }
+        ],
+        "ULTIMATE DIRECTION": [
+          { name: "Mountain Vest 6.0", weight: 230 },
+          { name: "Ultra Vest 6.0", weight: 180 },
+          { name: "Race Vest 6.0", weight: 145 }
+        ],
+        "CAMELBAK": [
+          { name: "Apex Pro Run Vest", weight: 220 },
+          { name: "Ultra Pro Vest", weight: 160 }
+        ],
+        "DYNAFIT": [
+          { name: "Alpine 15 Set", weight: 250 },
+          { name: "Ultra 12 Set", weight: 190 }
+        ]
+      },
+      ropa: {
+        "SALOMON": [
+          { name: "Chaqueta Bonatti Trail", weight: 195 },
+          { name: "Chaqueta Bonatti Waterproof", weight: 170 },
+          { name: "Bonatti Aero Wind Jacket", weight: 115 }
+        ],
+        "NNORMAL": [
+          { name: "Windbreaker Jacket", weight: 110 },
+          { name: "Waterproof Shell Jacket", weight: 175 }
+        ],
+        "LA SPORTIVA": [
+          { name: "Pytagoras Waterproof Jacket", weight: 210 },
+          { name: "Storm Fighter Jacket", weight: 240 },
+          { name: "Crizzle Wind Jacket", weight: 135 }
+        ],
+        "RAIDLIGHT": [
+          { name: "Chaqueta Ultralight MP+", weight: 150 },
+          { name: "Chaqueta Top MP+ (20k/20k)", weight: 200 },
+          { name: "Pantalón Impermeable MP+", weight: 130 }
+        ],
+        "DYNAFIT": [
+          { name: "Ultra 3L Jacket", weight: 183 },
+          { name: "Alpine Waterproof Jacket", weight: 195 }
+        ],
+        "COMPRESSPORT": [
+          { name: "Hurricane Waterproof Jacket", weight: 155 },
+          { name: "Hurricane Wind Jacket", weight: 99 }
+        ]
+      },
+      seguridad: {
+        "PETZL": [
+          { name: "Frontal Nao RL (1500lm)", weight: 145 },
+          { name: "Frontal Swift RL (900lm)", weight: 100 },
+          { name: "Frontal Tikka Core (450lm)", weight: 84 },
+          { name: "E-Lite (Emergencia)", weight: 26 }
+        ],
+        "BLACK DIAMOND": [
+          { name: "Frontal Sprint 225", weight: 56 },
+          { name: "Frontal Icon 700", weight: 236 },
+          { name: "Frontal Storm 450", weight: 100 }
+        ],
+        "LEDLENSER": [
+          { name: "HF8R Signature", weight: 158 },
+          { name: "NEO9R (Trail)", weight: 199 }
+        ],
+        "CAMP": [
+          { name: "Manta Térmica de Emergencia XL", weight: 55 },
+          { name: "Silbato de Emergencia Doble", weight: 10 }
+        ]
+      },
+      hidratacion_hardware: {
+        "SALOMON": [
+          { name: "Soft Flask 500ml / 17oz", weight: 35 },
+          { name: "Flask con Pipeta 500ml", weight: 40 }
+        ],
+        "CAMELBAK": [
+          { name: "Quick Stow Flask 500ml", weight: 45 },
+          { name: "Bolsa de Hidratación Crux 2L", weight: 160 }
+        ],
+        "HYDRAPAK": [
+          { name: "UltraFlask 500ml", weight: 38 },
+          { name: "SkyFlask 500ml con asa", weight: 43 }
+        ]
+      },
+      bastones: {
+        "BLACK DIAMOND": [
+          { name: "Distance Carbon Z Poles", weight: 290 },
+          { name: "Distance FLZ Carbon Poles", weight: 385 },
+          { name: "Trail Ergo Cork Poles", weight: 510 }
+        ],
+        "LEKI": [
+          { name: "MCT 12 Vario Carbon", weight: 380 },
+          { name: "Ultratrail FX.One Superlite", weight: 272 },
+          { name: "Micro Trail Pro", weight: 376 }
+        ],
+        "CAMP": [
+          { name: "Carbon Express Folding Poles", weight: 330 },
+          { name: "Kompakt Aluminum Poles", weight: 495 }
+        ]
+      }
+    };
+
+    const nutriCatalog = {
+      geles: {
+        "226ERS": [
+          { name: "High Energy Gel (50g CH)", weight: 76, carbs: 50, sodium: 250 },
+          { name: "Isotonic Gel (22g CH)", weight: 68, carbs: 22, sodium: 100 },
+          { name: "Sub9 Race Day Gel", weight: 76, carbs: 45, sodium: 320 }
+        ],
+        "MAURTEN": [
+          { name: "GEL 100 (25g CH)", weight: 40, carbs: 25, sodium: 20 },
+          { name: "GEL 160 (40g CH)", weight: 65, carbs: 40, sodium: 30 }
+        ],
+        "FANTÉ": [
+          { name: "GEL GLUT 5 (80g CH)", weight: 100, carbs: 80, sodium: 350 },
+          { name: "GEL GLUT 5 Lite (40g CH)", weight: 55, carbs: 40, sodium: 180 }
+        ],
+        "NAÄK": [
+          { name: "Ultra Energy Gel (27g CH)", weight: 50, carbs: 27, sodium: 140 }
+        ],
+        "GU ENERGY": [
+          { name: "Liquid Energy Gel (23g CH)", weight: 60, carbs: 23, sodium: 200 },
+          { name: "Energy Gel Original (22g CH)", weight: 32, carbs: 22, sodium: 55 }
+        ],
+        "SIS": [
+          { name: "GO Isotonic Gel (22g CH)", weight: 60, carbs: 22, sodium: 10 },
+          { name: "Beta Fuel Gel (40g CH)", weight: 68, carbs: 40, sodium: 30 }
+        ],
+        "CROWN SPORT": [
+          { name: "Pro 6.0 Gel (30g CH)", weight: 50, carbs: 30, sodium: 220 },
+          { name: "HyperGel 45 (45g CH)", weight: 65, carbs: 45, sodium: 300 }
+        ]
+      },
+      barritas: {
+        "226ERS": [
+          { name: "Sub9 Race Day Bar", weight: 60, carbs: 40, sodium: 180 }
+        ],
+        "MAURTEN": [
+          { name: "Solid 160 (Barrita 40g CH)", weight: 55, carbs: 40, sodium: 150 },
+          { name: "Solid 220 (Barrita 55g CH)", weight: 75, carbs: 55, sodium: 200 }
+        ],
+        "NAÄK": [
+          { name: "Ultra Energy Bar (50g)", weight: 50, carbs: 28, sodium: 160 },
+          { name: "Protein Waffles", weight: 30, carbs: 18, sodium: 90 }
+        ],
+        "CROWN SPORT": [
+          { name: "Energy Bar Oat & Fruit", weight: 50, carbs: 35, sodium: 110 }
+        ]
+      },
+      bebidas: {
+        "MAURTEN": [
+          { name: "Drink Mix 320 (80g CH)", weight: 80, carbs: 79, sodium: 200 },
+          { name: "Drink Mix 160 (40g CH)", weight: 40, carbs: 39, sodium: 100 }
+        ],
+        "226ERS": [
+          { name: "Energy Drink Bio (500ml)", weight: 60, carbs: 45, sodium: 220 }
+        ],
+        "FANTÉ": [
+          { name: "Energy Drink Carbs 90", weight: 75, carbs: 90, sodium: 400 }
+        ],
+        "NAÄK": [
+          { name: "Ultra Energy Drink Mix", weight: 60, carbs: 50, sodium: 320 }
+        ]
+      },
+      sales: {
+        "226ERS": [
+          { name: "Sub9 Pro Salts Electrolytes", weight: 15, carbs: 0, sodium: 300 }
+        ],
+        "GU ENERGY": [
+          { name: "Roctane Electrolyte Capsules", weight: 10, carbs: 0, sodium: 140 }
+        ],
+        "SIS": [
+          { name: "Electrolyte Hydro Tablets", weight: 5, carbs: 0, sodium: 340 }
+        ]
+      }
     };
 
     const i18n = {
       es: {
-        baseWeight: "Peso Base",
+        baseWeight: "Peso Material",
+        nutriWeight: "Peso Nutrición",
         totalWeight: "Peso Total",
-        brandCatalogTitle: "🏷️ Catálogo de Marcas Top",
-        btnAddPreset: "+ Añadir a Mochila",
+        gearCatalogTitle: "🎒 Catálogo de Material & Equipamiento",
+        nutriCatalogTitle: "⚡ Catálogo de Nutrición Deportiva",
+        btnAddGear: "+ Añadir Equipamiento",
+        btnAddNutri: "+ Añadir Nutrición a la Carga",
         catAll: "Todos",
         catRopa: "Ropa & Abrigo",
         catSeguridad: "Seguridad",
         catHidratacion: "Hidratación",
-        catNutricion: "Nutrición",
         catBastones: "Bastones/Varios",
-        addItem: "+ Añadir Nuevo Elemento",
+        addItem: "+ Añadir Material Personalizado",
         userWeight: "Peso del Corredor (kg):",
         routeDist: "Distancia de Ruta (km):",
         estTime: "Tiempo Estimado (horas):",
-        carbs: "Carbohidratos",
+        carbs: "CH Objetivo",
         water: "Agua",
         sodium: "Sodio / Sales",
         navMochila: "Mochila",
         navNutricion: "Nutrición",
         promptName: "Nombre del equipamiento:",
-        promptWeight: "Peso en gramos:",
-        isConsumable: "Es alimento o agua (suma a Peso Total, no a Base)?"
+        promptWeight: "Peso en gramos:"
       },
       eu: {
-        baseWeight: "Oinarrizko Pisua",
+        baseWeight: "Material Pisua",
+        nutriWeight: "Elikadura Pisua",
         totalWeight: "Pisu Osoa",
-        brandCatalogTitle: "🏷️ Marka Nagusien Katalogoa",
-        btnAddPreset: "+ Motzilara Gehitu",
+        gearCatalogTitle: "🎒 Material Katalogoa",
+        nutriCatalogTitle: "⚡ Elikadura Katalogoa",
+        btnAddGear: "+ Ekipamendua Gehitu",
+        btnAddNutri: "+ Elikadura Gehitu",
         catAll: "Denak",
         catRopa: "Jantziak",
         catSeguridad: "Segurtasuna",
         catHidratacion: "Hidratazioa",
-        catNutricion: "Elikadura",
         catBastones: "Makilak/Besteak",
-        addItem: "+ Elementu Berria Gehitu",
+        addItem: "+ Ekipamendu Pertsonalizatua",
         userWeight: "Korrikalariaren Pisua (kg):",
         routeDist: "Ireki Distantzia (km):",
         estTime: "Aurreikusitako Denbora (ordu):",
-        carbs: "Karbohidratoak",
+        carbs: "CH Helburua",
         water: "Ura",
         sodium: "Sodioa / Gatzak",
-        navMochila: "Muztila",
+        navMochila: "Motzila",
         navNutricion: "Elikadura",
         promptName: "Ekipamenduaren izena:",
-        promptWeight: "Pisua gramotan:",
-        isConsumable: "Janaria edo ura da (Pisu Osoan gehitzen da, ez Oinarrizkoan)?"
+        promptWeight: "Pisua gramotan:"
       },
       en: {
-        baseWeight: "Base Weight",
+        baseWeight: "Gear Weight",
+        nutriWeight: "Nutrition Weight",
         totalWeight: "Total Weight",
-        brandCatalogTitle: "🏷️ Top Brands Catalog",
-        btnAddPreset: "+ Add to Pack",
+        gearCatalogTitle: "🎒 Equipment & Gear Catalog",
+        nutriCatalogTitle: "⚡ Sports Nutrition Catalog",
+        btnAddGear: "+ Add Gear",
+        btnAddNutri: "+ Add Nutrition",
         catAll: "All",
         catRopa: "Clothing & Layers",
         catSeguridad: "Safety & Gear",
         catHidratacion: "Hydration",
-        catNutricion: "Nutrition",
         catBastones: "Poles & Misc",
-        addItem: "+ Add New Item",
+        addItem: "+ Add Custom Item",
         userWeight: "Runner Weight (kg):",
         routeDist: "Route Distance (km):",
         estTime: "Estimated Time (hours):",
-        carbs: "Carbohydrates",
+        carbs: "Target Carbs",
         water: "Water",
         sodium: "Sodium / Salts",
         navMochila: "Pack",
         navNutricion: "Nutrition",
         promptName: "Item Name:",
-        promptWeight: "Weight in grams:",
-        isConsumable: "Is consumable (food/water)?"
+        promptWeight: "Weight in grams:"
       }
     };
 
     let currentLang = 'es';
     let currentCategory = 'all';
+    let selectedGearBrand = null;
+    let selectedNutriBrand = null;
 
     let items = [
       { id: 1, name: { es: "Chaqueta Impermeable 10k/10k", eu: "Jaka Iragazgaitza 10k", en: "Waterproof Jacket 10k" }, weight: 210, category: "ropa", selected: true, consumable: false, carbs: 0, sodium: 0 },
@@ -644,13 +865,8 @@
       { id: 3, name: { es: "Silbato de Emergencia", eu: "Txulubitea", en: "Emergency Whistle" }, weight: 15, category: "seguridad", selected: true, consumable: false, carbs: 0, sodium: 0 },
       { id: 4, name: { es: "Frontal 300lm + Batería Repuesto", eu: "Aurreko Argia + Bateria", en: "Headlamp 300lm + Battery" }, weight: 120, category: "seguridad", selected: true, consumable: false, carbs: 0, sodium: 0 },
       { id: 5, name: { es: "Bidones Flexibles 2x500ml (vacíos)", eu: "Bidoi Malguak 2x500ml", en: "Soft Flasks 2x500ml" }, weight: 70, category: "hidratacion", selected: true, consumable: false, carbs: 0, sodium: 0 },
-      { id: 6, name: { es: "Agua (1000ml)", eu: "Ura (1000ml)", en: "Water (1000ml)" }, weight: 1000, category: "hidratacion", selected: true, consumable: true, carbs: 0, sodium: 0 },
-      { id: 7, name: { es: "226ERS High Energy Gel (50g CH)", eu: "226ERS High Energy Gel (50g CH)", en: "226ERS High Energy Gel (50g CH)" }, weight: 76, category: "nutricion", selected: true, consumable: true, carbs: 50, sodium: 250 },
-      { id: 8, name: { es: "Maurten GEL 100 (25g CH)", eu: "Maurten GEL 100 (25g CH)", en: "Maurten GEL 100 (25g CH)" }, weight: 40, category: "nutricion", selected: true, consumable: true, carbs: 25, sodium: 20 },
-      { id: 9, name: { es: "Pastillas de Electrolitos/Sales", eu: "Gatz Pilulak", en: "Electrolyte Tablets" }, weight: 30, category: "nutricion", selected: true, consumable: true, carbs: 0, sodium: 500 },
-      { id: 10, name: { es: "Bastones Plegables de Carbono", eu: "Karbonozko Makilak", en: "Carbon Folding Poles" }, weight: 280, category: "bastones", selected: false, consumable: false, carbs: 0, sodium: 0 },
-      { id: 11, name: { es: "Mallas Térmicas / Pantalón Largo", eu: "Malla Termikoak", en: "Thermal Tights" }, weight: 160, category: "ropa", selected: false, consumable: false, carbs: 0, sodium: 0 },
-      { id: 12, name: { es: "Vaso Reutilizable Obligatorio", eu: "Gota Berrerabilgarria", en: "Mandatory Soft Cup" }, weight: 25, category: "hidratacion", selected: true, consumable: false, carbs: 0, sodium: 0 }
+      { id: 6, name: { es: "226ERS High Energy Gel (50g CH)", eu: "226ERS High Energy Gel", en: "226ERS High Energy Gel" }, weight: 76, category: "nutricion", selected: true, consumable: true, carbs: 50, sodium: 250 },
+      { id: 7, name: { es: "Maurten GEL 100 (25g CH)", eu: "Maurten GEL 100", en: "Maurten GEL 100" }, weight: 40, category: "nutricion", selected: true, consumable: true, carbs: 25, sodium: 20 }
     ];
 
     function init() {
@@ -659,37 +875,66 @@
       calculateNutrition();
     }
 
-    function loadBrandProducts() {
-      const brand = document.getElementById('select-brand').value;
-      const selectProd = document.getElementById('select-product');
-      selectProd.innerHTML = '<option value="">-- Elige Modelo --</option>';
+    // --- LOGICA MATERIAL (MOCHILA) CON BOTONES DE MARCA VISUALES ---
+    function onGearCategoryChange() {
+      const catKey = document.getElementById('select-gear-category').value;
+      const brandGrid = document.getElementById('gear-brand-grid');
+      const modelSelect = document.getElementById('select-gear-model');
 
-      if (!brand || !brandCatalog[brand]) return;
+      brandGrid.innerHTML = '';
+      modelSelect.innerHTML = '<option value="">3. Elige Modelo Específico...</option>';
+      modelSelect.disabled = true;
+      selectedGearBrand = null;
 
-      brandCatalog[brand].forEach((prod, index) => {
-        const opt = document.createElement('option');
-        opt.value = index;
-        opt.textContent = `${prod.name} (${prod.weight}g)`;
-        selectProd.appendChild(opt);
+      if (!catKey || !gearCatalog[catKey]) {
+        brandGrid.style.display = 'none';
+        return;
+      }
+
+      brandGrid.style.display = 'grid';
+      Object.keys(gearCatalog[catKey]).forEach(brand => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'brand-logo-btn';
+        btn.textContent = brand; // Logotipo comercial estilizado
+        btn.onclick = () => selectGearBrand(catKey, brand, btn);
+        brandGrid.appendChild(btn);
       });
     }
 
-    function addPresetItem() {
-      const brand = document.getElementById('select-brand').value;
-      const prodIndex = document.getElementById('select-product').value;
+    function selectGearBrand(catKey, brand, btnElement) {
+      document.querySelectorAll('#gear-brand-grid .brand-logo-btn').forEach(b => b.classList.remove('selected'));
+      btnElement.classList.add('selected');
+      selectedGearBrand = brand;
 
-      if (!brand || prodIndex === "") return;
+      const modelSelect = document.getElementById('select-gear-model');
+      modelSelect.innerHTML = '<option value="">3. Elige Modelo Específico...</option>';
+      modelSelect.disabled = false;
 
-      const preset = brandCatalog[brand][prodIndex];
+      gearCatalog[catKey][brand].forEach((mod, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = `${mod.name} (${mod.weight}g)`;
+        modelSelect.appendChild(opt);
+      });
+    }
+
+    function addGearItem() {
+      const catKey = document.getElementById('select-gear-category').value;
+      const modelIndex = document.getElementById('select-gear-model').value;
+
+      if (!catKey || !selectedGearBrand || modelIndex === "") return;
+
+      const modelData = gearCatalog[catKey][selectedGearBrand][modelIndex];
       const newItem = {
         id: Date.now(),
-        name: `${brand} ${preset.name}`,
-        weight: preset.weight,
-        category: preset.category,
+        name: `${selectedGearBrand} ${modelData.name}`,
+        weight: modelData.weight,
+        category: catKey === 'mochilas' ? 'bastones' : (catKey === 'hidratacion_hardware' ? 'hidratacion' : catKey),
         selected: true,
-        consumable: preset.consumable,
-        carbs: preset.carbs || 0,
-        sodium: preset.sodium || 0
+        consumable: false,
+        carbs: 0,
+        sodium: 0
       };
 
       items.push(newItem);
@@ -698,6 +943,75 @@
       calculateNutrition();
     }
 
+    // --- LOGICA NUTRICIÓN CON BOTONES DE MARCA VISUALES ---
+    function onNutriCategoryChange() {
+      const catKey = document.getElementById('select-nutri-category').value;
+      const brandGrid = document.getElementById('nutri-brand-grid');
+      const modelSelect = document.getElementById('select-nutri-model');
+
+      brandGrid.innerHTML = '';
+      modelSelect.innerHTML = '<option value="">3. Elige Producto / Gel...</option>';
+      modelSelect.disabled = true;
+      selectedNutriBrand = null;
+
+      if (!catKey || !nutriCatalog[catKey]) {
+        brandGrid.style.display = 'none';
+        return;
+      }
+
+      brandGrid.style.display = 'grid';
+      Object.keys(nutriCatalog[catKey]).forEach(brand => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'brand-logo-btn';
+        btn.textContent = brand;
+        btn.onclick = () => selectNutriBrand(catKey, brand, btn);
+        brandGrid.appendChild(btn);
+      });
+    }
+
+    function selectNutriBrand(catKey, brand, btnElement) {
+      document.querySelectorAll('#nutri-brand-grid .brand-logo-btn').forEach(b => b.classList.remove('selected'));
+      btnElement.classList.add('selected');
+      selectedNutriBrand = brand;
+
+      const modelSelect = document.getElementById('select-nutri-model');
+      modelSelect.innerHTML = '<option value="">3. Elige Producto / Gel...</option>';
+      modelSelect.disabled = false;
+
+      nutriCatalog[catKey][brand].forEach((mod, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = `${mod.name} (${mod.weight}g | ${mod.carbs}g CH)`;
+        modelSelect.appendChild(opt);
+      });
+    }
+
+    function addNutriItem() {
+      const catKey = document.getElementById('select-nutri-category').value;
+      const modelIndex = document.getElementById('select-nutri-model').value;
+
+      if (!catKey || !selectedNutriBrand || modelIndex === "") return;
+
+      const modelData = nutriCatalog[catKey][selectedNutriBrand][modelIndex];
+      const newItem = {
+        id: Date.now(),
+        name: `${selectedNutriBrand} ${modelData.name}`,
+        weight: modelData.weight,
+        category: "nutricion",
+        selected: true,
+        consumable: true,
+        carbs: modelData.carbs || 0,
+        sodium: modelData.sodium || 0
+      };
+
+      items.push(newItem);
+      renderEquipment();
+      calculateWeights();
+      calculateNutrition();
+    }
+
+    // --- IDIOMA Y RENDER ---
     function setLanguage(lang) {
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
@@ -705,14 +1019,16 @@
 
       const dict = i18n[lang];
       document.getElementById('lbl-base-weight').textContent = dict.baseWeight;
+      document.getElementById('lbl-nutri-weight').textContent = dict.nutriWeight;
       document.getElementById('lbl-total-weight').textContent = dict.totalWeight;
-      document.getElementById('lbl-brand-catalog').textContent = dict.brandCatalogTitle;
-      document.getElementById('btn-add-preset').textContent = dict.btnAddPreset;
+      document.getElementById('lbl-gear-catalog').textContent = dict.gearCatalogTitle;
+      document.getElementById('lbl-nutri-catalog').textContent = dict.nutriCatalogTitle;
+      document.getElementById('btn-add-gear').textContent = dict.btnAddGear;
+      document.getElementById('btn-add-nutri').textContent = dict.btnAddNutri;
       document.getElementById('cat-all').textContent = dict.catAll;
       document.getElementById('cat-ropa').textContent = dict.catRopa;
       document.getElementById('cat-seguridad').textContent = dict.catSeguridad;
       document.getElementById('cat-hidratacion').textContent = dict.catHidratacion;
-      document.getElementById('cat-nutricion').textContent = dict.catNutricion;
       document.getElementById('cat-bastones').textContent = dict.catBastones;
       document.getElementById('btn-add-item').textContent = dict.addItem;
       document.getElementById('lbl-user-weight').textContent = dict.userWeight;
@@ -744,7 +1060,7 @@
             <div class="custom-checkbox"></div>
             <div class="item-info">
               <div class="item-name">${nameText}</div>
-              <div class="item-tag">${item.consumable ? 'Consumible' : 'Material Base'} ${item.carbs ? '| ' + item.carbs + 'g CH' : ''}</div>
+              <div class="item-tag">${item.consumable ? 'Nutrición / Agua' : 'Material Base'} ${item.carbs ? '| ' + item.carbs + 'g CH' : ''}</div>
             </div>
           </div>
           <div class="item-right">
@@ -781,20 +1097,24 @@
     }
 
     function calculateWeights() {
-      let base = 0;
-      let total = 0;
+      let gearWeight = 0;
+      let nutriWeight = 0;
+      let totalWeight = 0;
 
       items.forEach(item => {
         if (item.selected) {
-          total += item.weight;
-          if (!item.consumable) {
-            base += item.weight;
+          totalWeight += item.weight;
+          if (item.consumable) {
+            nutriWeight += item.weight;
+          } else {
+            gearWeight += item.weight;
           }
         }
       });
 
-      document.getElementById('val-base-weight').textContent = base;
-      document.getElementById('val-total-weight').textContent = total;
+      document.getElementById('val-base-weight').textContent = gearWeight;
+      document.getElementById('val-nutri-weight').textContent = nutriWeight;
+      document.getElementById('val-total-weight').textContent = totalWeight;
     }
 
     function calculateNutrition() {
@@ -834,21 +1154,20 @@
       }
     }
 
-    function addNewItemPrompt() {
+    function addNewItemPrompt(isNutri) {
       const dict = i18n[currentLang];
       const name = prompt(dict.promptName);
       if (!name) return;
       const weight = parseInt(prompt(dict.promptWeight, "100"));
       if (isNaN(weight)) return;
-      const isConsumable = confirm(dict.isConsumable);
 
       const newItem = {
         id: Date.now(),
         name: name,
         weight: weight,
-        category: "bastones",
+        category: isNutri ? "nutricion" : "bastones",
         selected: true,
-        consumable: isConsumable,
+        consumable: isNutri,
         carbs: 0,
         sodium: 0
       };
