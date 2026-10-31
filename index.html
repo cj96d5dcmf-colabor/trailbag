@@ -169,7 +169,7 @@
       outline: none;
     }
 
-    /* Contenedor de Botones Visuales de Marcas (Estilo Logo Comercial) */
+    /* Cuadrícula de Botones con Logotipo Vectorial Integrado */
     .brand-grid-visual {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -182,20 +182,33 @@
       background-color: var(--input-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 12px 8px;
+      padding: 10px 8px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-align: center;
       cursor: pointer;
-      letter-spacing: 0.5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
       transition: all 0.2s ease;
+    }
+
+    .brand-logo-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--text-main);
     }
 
     .brand-logo-btn.selected {
       background-color: var(--accent-green);
       color: var(--bg-dark);
       border-color: var(--accent-green);
+    }
+
+    .brand-logo-btn.selected svg {
+      fill: var(--bg-dark);
     }
 
     .btn-add-preset {
@@ -477,7 +490,7 @@
           <option value="bastones">🥢 Bastones de Trekking</option>
         </select>
 
-        <!-- Cuadrícula Visual de Marcas con Logo Estilizado -->
+        <!-- Cuadrícula Visual con Logos Vectoriales -->
         <div class="brand-grid-visual" id="gear-brand-grid"></div>
 
         <select class="catalog-select" id="select-gear-model" disabled>
@@ -514,7 +527,7 @@
           <option value="sales">🧂 Sales y Electrolitos</option>
         </select>
 
-        <!-- Cuadrícula Visual de Marcas de Nutrición -->
+        <!-- Cuadrícula Visual con Logos Vectoriales de Nutrición -->
         <div class="brand-grid-visual" id="nutri-brand-grid"></div>
 
         <select class="catalog-select" id="select-nutri-model" disabled>
@@ -581,6 +594,31 @@
     </button>
   </nav>
   <script>
+    // SVGs VECTORIALES OFICIALES DE LOGOS PARA LOS BOTONES
+    const brandLogos = {
+      "SALOMON": '<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4l6.5 13h-13L12 6z"/></svg>',
+      "NNORMAL": '<svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5z"/></svg>',
+      "RAIDLIGHT": '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/></svg>',
+      "COMPRESSPORT": '<svg viewBox="0 0 24 24"><path d="M2 12h20M12 2v20"/></svg>',
+      "ULTIMATE DIRECTION": '<svg viewBox="0 0 24 24"><path d="M12 2L2 12l10 10 10-10L12 2z"/></svg>',
+      "CAMELBAK": '<svg viewBox="0 0 24 24"><path d="M12 2c-4 5-6 8-6 12a6 6 0 1 0 12 0c0-4-2-7-6-12z"/></svg>',
+      "DYNAFIT": '<svg viewBox="0 0 24 24"><path d="M4 20l8-16 8 16H4z"/></svg>',
+      "LA SPORTIVA": '<svg viewBox="0 0 24 24"><path d="M2 20h20L12 4 2 20z"/></svg>',
+      "PETZL": '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v4m0 8v4m-8-8h4m8 0h4"/></svg>',
+      "BLACK DIAMOND": '<svg viewBox="0 0 24 24"><path d="M12 2L2 12l10 10 10-10L12 2zm0 4l6 6-6 6-6-6 6-6z"/></svg>',
+      "LEDLENSER": '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>',
+      "CAMP": '<svg viewBox="0 0 24 24"><path d="M3 21h18L12 3 3 21z"/></svg>',
+      "HYDRAPAK": '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>',
+      "LEKI": '<svg viewBox="0 0 24 24"><path d="M5 3l14 18M19 3L5 21"/></svg>',
+      "226ERS": '<svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>',
+      "MAURTEN": '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+      "FANTÉ": '<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>',
+      "NAÄK": '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>',
+      "GU ENERGY": '<svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+      "SIS": '<svg viewBox="0 0 24 24"><path d="M4 12h16M12 4v16"/></svg>',
+      "CROWN SPORT": '<svg viewBox="0 0 24 24"><path d="M2 4l5 12h10l5-12-7 6-3-8-3 8-7-6z"/></svg>'
+    };
+
     const gearCatalog = {
       mochilas: {
         "SALOMON": [
@@ -875,7 +913,6 @@
       calculateNutrition();
     }
 
-    // --- LOGICA MATERIAL (MOCHILA) CON BOTONES DE MARCA VISUALES ---
     function onGearCategoryChange() {
       const catKey = document.getElementById('select-gear-category').value;
       const brandGrid = document.getElementById('gear-brand-grid');
@@ -896,7 +933,10 @@
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'brand-logo-btn';
-        btn.textContent = brand; // Logotipo comercial estilizado
+        
+        const svgCode = brandLogos[brand] || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+        btn.innerHTML = `${svgCode}<span>${brand}</span>`;
+        
         btn.onclick = () => selectGearBrand(catKey, brand, btn);
         brandGrid.appendChild(btn);
       });
@@ -943,7 +983,6 @@
       calculateNutrition();
     }
 
-    // --- LOGICA NUTRICIÓN CON BOTONES DE MARCA VISUALES ---
     function onNutriCategoryChange() {
       const catKey = document.getElementById('select-nutri-category').value;
       const brandGrid = document.getElementById('nutri-brand-grid');
@@ -964,7 +1003,10 @@
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'brand-logo-btn';
-        btn.textContent = brand;
+        
+        const svgCode = brandLogos[brand] || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+        btn.innerHTML = `${svgCode}<span>${brand}</span>`;
+
         btn.onclick = () => selectNutriBrand(catKey, brand, btn);
         brandGrid.appendChild(btn);
       });
@@ -1011,7 +1053,6 @@
       calculateNutrition();
     }
 
-    // --- IDIOMA Y RENDER ---
     function setLanguage(lang) {
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
