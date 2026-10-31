@@ -2,18 +2,18 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TrailBag - Mountain Equipment & Nutrition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrailBag — Gestión de Equipamiento y Nutrición</title>
   <style>
     :root {
-      --bg-dark: #121614;
-      --card-bg: #1c2820;
-      --card-border: #2a382e;
-      --accent-orange: #e07a5f;
-      --accent-green: #8ba888;
-      --text-main: #f2ede4;
-      --text-muted: #a3b0a2;
-      --input-bg: #16201a;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #10b981;
+      --accent-hover: #059669;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --warning-color: #f59e0b;
     }
 
     * {
@@ -21,669 +21,434 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-color);
       color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      max-width: 600px;
-      margin: 0 auto;
-      padding-bottom: 70px;
+      padding-bottom: 90px;
     }
 
-    /* Header & Language Selector */
     header {
       background-color: var(--card-bg);
       padding: 16px;
-      border-bottom: 1px solid var(--card-border);
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--accent-color);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Accordion Styles */
+    .accordion-item {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      width: 100%;
+      padding: 16px;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 600;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand-title span {
-      color: var(--accent-orange);
-    }
-
-    .lang-selector {
-      display: flex;
-      gap: 4px;
-      background-color: var(--bg-dark);
-      padding: 3px;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-    }
-
-    .lang-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: 5px;
       cursor: pointer;
     }
 
-    .lang-btn.active {
-      background-color: var(--accent-orange);
-      color: #fff;
-    }
-
-    /* Weight Dashboard */
-    .weight-summary {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding: 16px;
-      background-color: var(--bg-dark);
-    }
-
-    .weight-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .weight-card.highlight {
-      border-color: var(--accent-orange);
-    }
-
-    .weight-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-
-    .weight-value {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .weight-value span {
-      font-size: 0.85rem;
-      color: var(--accent-green);
-    }
-
-    /* Main Navigation Tabs */
-    .view-content {
+    .accordion-content {
       display: none;
-      padding: 0 16px 16px 16px;
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      background-color: rgba(15, 23, 42, 0.4);
     }
 
-    .view-content.active {
+    .accordion-item.active .accordion-content {
       display: block;
     }
 
-    /* Category Filter Pills */
-    .category-scroll {
-      display: flex;
+    /* Selector Grid */
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
       gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-      scrollbar-width: none;
-    }
-
-    .category-scroll::-webkit-scrollbar {
-      display: none;
-    }
-
-    .cat-pill {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .cat-pill.active {
-      background-color: var(--accent-green);
-      color: var(--bg-dark);
-      border-color: var(--accent-green);
-      font-weight: 700;
-    }
-
-    /* Equipment Checklist */
-    .item-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .item-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-    }
-
-    .item-card.selected {
-      border-color: var(--accent-green);
-      background-color: #213026;
-    }
-
-    .item-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .custom-checkbox {
-      width: 20px;
-      height: 20px;
-      border-radius: 6px;
-      border: 2px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: justify;
-      background-color: var(--input-bg);
-    }
-
-    .item-card.selected .custom-checkbox {
-      background-color: var(--accent-green);
-      border-color: var(--accent-green);
-    }
-
-    .item-card.selected .custom-checkbox::after {
-      content: "✓";
-      color: var(--bg-dark);
-      font-size: 0.85rem;
-      font-weight: 900;
-      margin: 0 auto;
-    }
-
-    .item-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .item-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .item-tag {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .item-weight {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--accent-orange);
-    }
-
-    /* Add Item Form Button & Modal */
-    .add-item-btn {
-      width: 100%;
-      background-color: transparent;
-      border: 2px dashed var(--card-border);
-      color: var(--accent-green);
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 12px;
-    }
-
-    /* Form & Inputs */
-    .form-group {
       margin-bottom: 14px;
     }
 
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      background-color: var(--input-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-    }
-
-    /* Nutrition Results Card */
-    .nutrition-results {
+    .brand-btn {
       background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 16px;
-    }
-
-    .nutri-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 12px;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 4px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
       text-align: center;
     }
 
-    .nutri-box {
-      background-color: var(--input-bg);
-      padding: 10px;
+    .brand-btn.selected {
+      border-color: var(--accent-color);
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--accent-color);
+    }
+
+    .product-select {
+      width: 100%;
+      padding: 12px;
       border-radius: 8px;
-      border: 1px solid var(--card-border);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      outline: none;
     }
 
-    .nutri-title {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
+    .add-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--accent-color);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
     }
 
-    .nutri-val {
+    .add-btn:active {
+      background-color: var(--accent-hover);
+    }
+
+    /* Items List */
+    .item-list {
+      margin-top: 12px;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.85rem;
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
       font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--accent-orange);
-      margin-top: 4px;
+      cursor: pointer;
+      margin-left: 8px;
     }
 
-    /* Bottom Navigation Bar */
-    .bottom-nav {
+    /* Floating Summary Bar */
+    .summary-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      max-width: 600px;
-      margin: 0 auto;
       background-color: var(--card-bg);
-      border-top: 1px solid var(--card-border);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      padding: 8px 0;
-      z-index: 100;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding: 12px 16px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-around;
       align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
+      z-index: 20;
     }
 
-    .nav-btn.active {
-      color: var(--accent-orange);
+    .stat-box {
+      text-align: center;
     }
 
-    .nav-icon {
-      font-size: 1.2rem;
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .stat-value.highlight {
+      color: var(--accent-color);
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header>
-    <div class="brand-title">🌲 Trail<span>Bag</span></div>
-    <div class="lang-selector">
-      <button class="lang-btn active" onclick="setLanguage('es')">ES</button>
-      <button class="lang-btn" onclick="setLanguage('eu')">EU</button>
-      <button class="lang-btn" onclick="setLanguage('en')">EN</button>
-    </div>
+    <h1>TrailBag — Mochila & Nutrición</h1>
   </header>
 
-  <!-- Weight Summary Dashboard -->
-  <section class="weight-summary">
-    <div class="weight-card">
-      <div class="weight-label" id="lbl-base-weight">Peso Base</div>
-      <div class="weight-value"><span id="val-base-weight">0</span> <span>g</span></div>
-    </div>
-    <div class="weight-card highlight">
-      <div class="weight-label" id="lbl-total-weight">Peso Total</div>
-      <div class="weight-value"><span id="val-total-weight">0</span> <span>g</span></div>
-    </div>
-  </section>
-
-  <!-- TAB 1: MOCHILA (EQUIPAMIENTO) -->
-  <main id="view-mochila" class="view-content active">
-    <!-- Category Pills -->
-    <div class="category-scroll">
-      <button class="cat-pill active" onclick="filterCategory('all')" id="cat-all">Todos</button>
-      <button class="cat-pill" onclick="filterCategory('ropa')" id="cat-ropa">Ropa & Abrigo</button>
-      <button class="cat-pill" onclick="filterCategory('seguridad')" id="cat-seguridad">Seguridad</button>
-      <button class="cat-pill" onclick="filterCategory('hidratacion')" id="cat-hidratacion">Hidratación</button>
-      <button class="cat-pill" onclick="filterCategory('nutricion')" id="cat-nutricion">Nutrición</button>
-      <button class="cat-pill" onclick="filterCategory('bastones')" id="cat-bastones">Bastones/Varios</button>
-    </div>
-
-    <!-- Equipment List -->
-    <div class="item-list" id="equipment-container">
-      <!-- Items generated dynamically -->
-    </div>
-
-    <!-- Add Custom Item Button -->
-    <button class="add-item-btn" onclick="addNewItemPrompt()" id="btn-add-item">+ Añadir Nuevo Elemento</button>
-  </main>
-
-  <!-- TAB 2: NUTRICIÓN & HIDRATACIÓN -->
-  <main id="view-nutricion" class="view-content">
-    <div class="nutrition-results">
-      <div class="form-group">
-        <label id="lbl-user-weight">Peso del Corredor (kg):</label>
-        <input type="number" id="input-weight" value="70" oninput="calculateNutrition()">
-      </div>
-      <div class="form-group">
-        <label id="lbl-route-dist">Distancia de Ruta (km):</label>
-        <input type="number" id="input-dist" value="42" oninput="calculateNutrition()">
-      </div>
-      <div class="form-group">
-        <label id="lbl-est-time">Tiempo Estimado (horas):</label>
-        <input type="number" id="input-time" value="6" oninput="calculateNutrition()">
-      </div>
-
-      <div class="nutri-grid">
-        <div class="nutri-box">
-          <div class="nutri-title" id="lbl-carbs">Carbohidratos</div>
-          <div class="nutri-val"><span id="val-carbs">60</span> <small>g/h</small></div>
-        </div>
-        <div class="nutri-box">
-          <div class="nutri-title" id="lbl-water">Agua</div>
-          <div class="nutri-val"><span id="val-water">500</span> <small>ml/h</small></div>
-        </div>
-        <div class="nutri-box">
-          <div class="nutri-title" id="lbl-sodium">Sodio / Sales</div>
-          <div class="nutri-val"><span id="val-sodium">600</span> <small>mg/h</small></div>
-        </div>
+  <div class="container">
+    
+    <!-- 1. MOCHILAS Y PORTABILIDAD -->
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🎒 1. Mochilas y Chalecos</span>
+        <span class="badge" id="badge-backpacks">0g</span>
+      </button>
+      <div class="accordion-content">
+        <div class="brand-grid" id="brands-backpacks"></div>
+        <select class="product-select" id="select-backpacks">
+          <option value="">Selecciona una marca primero...</option>
+        </select>
+        <button class="add-btn" onclick="addItem('backpacks')">+ Añadir a la Mochila</button>
+        <div class="item-list" id="list-backpacks"></div>
       </div>
     </div>
-  </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="switchTab('mochila')" id="nav-mochila">
-      <span class="nav-icon">🎒</span>
-      <span id="nav-lbl-mochila">Mochila</span>
-    </button>
-    <button class="nav-btn" onclick="switchTab('nutricion')" id="nav-nutricion">
-      <span class="nav-icon">🧪</span>
-      <span id="nav-lbl-nutricion">Nutrición</span>
-    </button>
-  </nav>
+    <!-- 2. MATERIAL OBLIGATORIO -->
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🛡️ 2. Material Obligatorio</span>
+        <span class="badge" id="badge-gear">0g</span>
+      </button>
+      <div class="accordion-content">
+        <div class="brand-grid" id="brands-gear"></div>
+        <select class="product-select" id="select-gear">
+          <option value="">Selecciona una marca primero...</option>
+        </select>
+        <button class="add-btn" onclick="addItem('gear')">+ Añadir a la Mochila</button>
+        <div class="item-list" id="list-gear"></div>
+      </div>
+    </div>
+
+    <!-- 3. NUTRICIÓN E HIDRATACIÓN -->
+    <div class="accordion-item">
+      <button class="accordion-header" onclick="toggleAccordion(this)">
+        <span>⚡ 3. Nutrición e Hidratación</span>
+        <span class="badge" id="badge-nutrition">0g | 0g CH</span>
+      </button>
+      <div class="accordion-content">
+        <div class="brand-grid" id="brands-nutrition"></div>
+        <select class="product-select" id="select-nutrition">
+          <option value="">Selecciona una marca primero...</option>
+        </select>
+        <button class="add-btn" onclick="addItem('nutrition')">+ Añadir a la Mochila</button>
+        <div class="item-list" id="list-nutrition"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Barra Fija Inferior -->
+  <div class="summary-bar">
+    <div class="stat-box">
+      <div class="stat-label">Peso Total</div>
+      <div class="stat-value highlight" id="total-weight">0 g</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Carga Hidratos</div>
+      <div class="stat-value" id="total-carbs">0 g CH</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Sodio Total</div>
+      <div class="stat-value" id="total-sodium">0 mg</div>
+    </div>
+  </div>
 
   <script>
-    // DICCIONARIO TRI-IDIOMA
-    const i18n = {
-      es: {
-        baseWeight: "Peso Base",
-        totalWeight: "Peso Total",
-        catAll: "Todos",
-        catRopa: "Ropa & Abrigo",
-        catSeguridad: "Seguridad",
-        catHidratacion: "Hidratación",
-        catNutricion: "Nutrición",
-        catBastones: "Bastones/Varios",
-        addItem: "+ Añadir Nuevo Elemento",
-        userWeight: "Peso del Corredor (kg):",
-        routeDist: "Distancia de Ruta (km):",
-        estTime: "Tiempo Estimado (horas):",
-        carbs: "Carbohidratos",
-        water: "Agua",
-        sodium: "Sodio / Sales",
-        navMochila: "Mochila",
-        navNutricion: "Nutrición",
-        promptName: "Nombre del equipamiento:",
-        promptWeight: "Peso en gramos:",
-        isConsumable: "Es alimento o agua (suma a Peso Total, no a Base)?"
+    // Base de datos ligera de marcas y productos preset
+    const DB = {
+      backpacks: {
+        "Salomon": [
+          { name: "Sense Pro 5", weight: 144, carbs: 0, sodium: 0 },
+          { name: "Active Skin 8", weight: 213, carbs: 0, sodium: 0 }
+        ],
+        "RaidLight": [
+          { name: "Responsiv 12L", weight: 200, carbs: 0, sodium: 0 }
+        ],
+        "Compressport": [
+          { name: "Ultralight Pack 10L", weight: 117, carbs: 0, sodium: 0 }
+        ],
+        "Nnormal": [
+          { name: "Race Vest 5L", weight: 150, carbs: 0, sodium: 0 }
+        ]
       },
-      eu: {
-        baseWeight: "Oinarrizko Pisua",
-        totalWeight: "Pisu Osoa",
-        catAll: "Denak",
-        catRopa: "Jantziak",
-        catSeguridad: "Segurtasuna",
-        catHidratacion: "Hidratazioa",
-        catNutricion: "Elikadura",
-        catBastones: "Makilak/Besteak",
-        addItem: "+ Elementu Berria Gehitu",
-        userWeight: "Korrikalariaren Pisua (kg):",
-        routeDist: "Ireki Distantzia (km):",
-        estTime: "Aurreikusitako Denbora (ordu):",
-        carbs: "Karbohidratoak",
-        water: "Ura",
-        sodium: "Sodioa / Gatzak",
-        navMochila: "Muztila",
-        navNutricion: "Elikadura",
-        promptName: "Ekipamenduaren izena:",
-        promptWeight: "Pisua gramotan:",
-        isConsumable: "Janaria edo ura da (Pisu Osoan gehitzen da, ez Oinarrizkoan)?"
+      gear: {
+        "Salomon": [
+          { name: "Chaqueta Bonatti Trail", weight: 195, carbs: 0, sodium: 0 }
+        ],
+        "RaidLight": [
+          { name: "Chaqueta Ultralight MP+", weight: 150, carbs: 0, sodium: 0 }
+        ],
+        "Petzl": [
+          { name: "Frontal Nao RL", weight: 145, carbs: 0, sodium: 0 },
+          { name: "Frontal Swift RL", weight: 100, carbs: 0, sodium: 0 }
+        ],
+        "Black Diamond": [
+          { name: "Frontal Sprint 225", weight: 56, carbs: 0, sodium: 0 }
+        ]
       },
-      en: {
-        baseWeight: "Base Weight",
-        totalWeight: "Total Weight",
-        catAll: "All",
-        catRopa: "Clothing & Layers",
-        catSeguridad: "Safety & Gear",
-        catHidratacion: "Hydration",
-        catNutricion: "Nutrition",
-        catBastones: "Poles & Misc",
-        addItem: "+ Add New Item",
-        userWeight: "Runner Weight (kg):",
-        routeDist: "Route Distance (km):",
-        estTime: "Estimated Time (hours):",
-        carbs: "Carbohydrates",
-        water: "Water",
-        sodium: "Sodium / Salts",
-        navMochila: "Pack",
-        navNutricion: "Nutrition",
-        promptName: "Item Name:",
-        promptWeight: "Weight in grams:",
-        isConsumable: "Is consumable (food/water)?"
+      nutrition: {
+        "226ERS": [
+          { name: "High Energy Gel (50g CH)", weight: 76, carbs: 50, sodium: 250 },
+          { name: "Isotonic Gel (22g CH)", weight: 68, carbs: 22, sodium: 100 }
+        ],
+        "Maurten": [
+          { name: "GEL 100 (25g CH)", weight: 40, carbs: 25, sodium: 20 },
+          { name: "GEL 160 (40g CH)", weight: 65, carbs: 40, sodium: 30 }
+        ],
+        "Fanté": [
+          { name: "GEL GLUT 5 (80g CH)", weight: 100, carbs: 80, sodium: 350 }
+        ],
+        "Naäk": [
+          { name: "Ultra Energy Gel (27g CH)", weight: 50, carbs: 27, sodium: 140 },
+          { name: "Ultra Energy Bar (28g CH)", weight: 50, carbs: 28, sodium: 160 }
+        ],
+        "SiS": [
+          { name: "GO Isotonic Gel (22g CH)", weight: 60, carbs: 22, sodium: 10 }
+        ]
       }
     };
 
-    let currentLang = 'es';
-    let currentCategory = 'all';
+    let userState = {
+      backpacks: [],
+      gear: [],
+      nutrition: []
+    };
 
-    // DATOS DE EQUIPAMIENTO EXTENSO
-    let items = [
-      { id: 1, name: { es: "Chaqueta Impermeable 10k/10k", eu: "Jaka Iragazgaitza 10k", en: "Waterproof Jacket 10k" }, weight: 210, category: "ropa", selected: true, consumable: false },
-      { id: 2, name: { es: "Manta Térmica de Emergencia", eu: "Manta Termikoa", en: "Emergency Blanket" }, weight: 50, category: "seguridad", selected: true, consumable: false },
-      { id: 3, name: { es: "Silbato de Emergencia", eu: "Txulubitea", en: "Emergency Whistle" }, weight: 15, category: "seguridad", selected: true, consumable: false },
-      { id: 4, name: { es: "Frontal 300lm + Batería Repuesto", eu: "Aurreko Argia + Bateria", en: "Headlamp 300lm + Battery" }, weight: 120, category: "seguridad", selected: true, consumable: false },
-      { id: 5, name: { es: "Bidones Flexibles 2x500ml (vacíos)", eu: "Bidoi Malguak 2x500ml", en: "Soft Flasks 2x500ml" }, weight: 70, category: "hidratacion", selected: true, consumable: false },
-      { id: 6, name: { es: "Agua (1000ml)", eu: "Ura (1000ml)", en: "Water (1000ml)" }, weight: 1000, category: "hidratacion", selected: true, consumable: true },
-      { id: 7, name: { es: "Geles Energéticos (4x40g)", eu: "Gel Energetikoak (4x40g)", en: "Energy Gels (4x40g)" }, weight: 160, category: "nutricion", selected: true, consumable: true },
-      { id: 8, name: { es: "Barritas Energéticas (2x50g)", eu: "Baraunka Energetikoak", en: "Energy Bars (2x50g)" }, weight: 100, category: "nutricion", selected: false, consumable: true },
-      { id: 9, name: { es: "Pastillas de Electrolitos/Sales", eu: "Gatz Pilulak", en: "Electrolyte Tablets" }, weight: 30, category: "nutricion", selected: true, consumable: true },
-      { id: 10, name: { es: "Bastones Plegables de Carbono", eu: "Karbonozko Makilak", en: "Carbon Folding Poles" }, weight: 280, category: "bastones", selected: false, consumable: false },
-      { id: 11, name: { es: "Mallas Térmicas / Pantalón Largo", eu: "Malla Termikoak", en: "Thermal Tights" }, weight: 160, category: "ropa", selected: false, consumable: false },
-      { id: 12, name: { es: "Vaso Reutilizable Obligatorio", eu: "Gota Berrerabilgarria", en: "Mandatory Soft Cup" }, weight: 25, category: "hidratacion", selected: true, consumable: false }
-    ];
+    let selectedBrands = {
+      backpacks: null,
+      gear: null,
+      nutrition: null
+    };
 
-    // INICIALIZACIÓN
     function init() {
-      renderEquipment();
-      calculateWeights();
-      calculateNutrition();
+      renderBrandButtons('backpacks');
+      renderBrandButtons('gear');
+      renderBrandButtons('nutrition');
     }
 
-    // CAMBIO DE IDIOMA
-    function setLanguage(lang) {
-      currentLang = lang;
-      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-
-      const dict = i18n[lang];
-      document.getElementById('lbl-base-weight').textContent = dict.baseWeight;
-      document.getElementById('lbl-total-weight').textContent = dict.totalWeight;
-      document.getElementById('cat-all').textContent = dict.catAll;
-      document.getElementById('cat-ropa').textContent = dict.catRopa;
-      document.getElementById('cat-seguridad').textContent = dict.catSeguridad;
-      document.getElementById('cat-hidratacion').textContent = dict.catHidratacion;
-      document.getElementById('cat-nutricion').textContent = dict.catNutricion;
-      document.getElementById('cat-bastones').textContent = dict.catBastones;
-      document.getElementById('btn-add-item').textContent = dict.addItem;
-      document.getElementById('lbl-user-weight').textContent = dict.userWeight;
-      document.getElementById('lbl-route-dist').textContent = dict.routeDist;
-      document.getElementById('lbl-est-time').textContent = dict.estTime;
-      document.getElementById('lbl-carbs').textContent = dict.carbs;
-      document.getElementById('lbl-water').textContent = dict.water;
-      document.getElementById('lbl-sodium').textContent = dict.sodium;
-      document.getElementById('nav-lbl-mochila').textContent = dict.navMochila;
-      document.getElementById('nav-lbl-nutricion').textContent = dict.navNutricion;
-
-      renderEquipment();
+    function toggleAccordion(button) {
+      const item = button.parentElement;
+      item.classList.toggle('active');
     }
 
-    // RENDERIZADO DE LISTA
-    function renderEquipment() {
-      const container = document.getElementById('equipment-container');
+    function renderBrandButtons(category) {
+      const container = document.getElementById(`brands-${category}`);
       container.innerHTML = '';
+      const brands = Object.keys(DB[category]);
 
-      items.forEach(item => {
-        if (currentCategory !== 'all' && item.category !== currentCategory) return;
-
-        const nameText = typeof item.name === 'object' ? (item.name[currentLang] || item.name.es) : item.name;
-
-        const card = document.createElement('div');
-        card.className = `item-card ${item.selected ? 'selected' : ''}`;
-        card.onclick = () => toggleItem(item.id);
-
-        card.innerHTML = `
-          <div class="item-left">
-            <div class="custom-checkbox"></div>
-            <div class="item-info">
-              <div class="item-name">${nameText}</div>
-              <div class="item-tag">${item.consumable ? 'Consumible' : 'Material Base'}</div>
-            </div>
-          </div>
-          <div class="item-weight">${item.weight} g</div>
-        `;
-        container.appendChild(card);
+      brands.forEach(brand => {
+        const btn = document.createElement('button');
+        btn.className = `brand-btn ${selectedBrands[category] === brand ? 'selected' : ''}`;
+        btn.textContent = brand;
+        btn.onclick = () => selectBrand(category, brand);
+        container.appendChild(btn);
       });
     }
 
-    function toggleItem(id) {
-      const item = items.find(i => i.id === id);
-      if (item) {
-        item.selected = !item.selected;
-        renderEquipment();
-        calculateWeights();
-      }
+    function selectBrand(category, brand) {
+      selectedBrands[category] = brand;
+      renderBrandButtons(category);
+
+      const select = document.getElementById(`select-${category}`);
+      select.innerHTML = '<option value="">-- Selecciona Modelo --</option>';
+
+      DB[category][brand].forEach((prod, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = `${prod.name} (${prod.weight}g${prod.carbs > 0 ? ' | ' + prod.carbs + 'g CH' : ''})`;
+        select.appendChild(opt);
+      });
     }
 
-    function filterCategory(cat) {
-      currentCategory = cat;
-      document.querySelectorAll('.cat-pill').forEach(pill => pill.classList.remove('active'));
-      event.target.classList.add('active');
-      renderEquipment();
+    function addItem(category) {
+      const brand = selectedBrands[category];
+      const select = document.getElementById(`select-${category}`);
+      const index = select.value;
+
+      if (!brand || index === "") return;
+
+      const prod = DB[category][brand][index];
+      userState[category].push({ ...prod, brand });
+      
+      updateUI();
     }
 
-    // CÁLCULO DE PESOS
-    function calculateWeights() {
-      let base = 0;
-      let total = 0;
+    function removeItem(category, index) {
+      userState[category].splice(index, 1);
+      updateUI();
+    }
 
-      items.forEach(item => {
-        if (item.selected) {
-          total += item.weight;
-          if (!item.consumable) {
-            base += item.weight;
-          }
+    function updateUI() {
+      let totalWeight = 0;
+      let totalCarbs = 0;
+      let totalSodium = 0;
+
+      ['backpacks', 'gear', 'nutrition'].forEach(cat => {
+        const listContainer = document.getElementById(`list-${cat}`);
+        listContainer.innerHTML = '';
+        
+        let catWeight = 0;
+        let catCarbs = 0;
+
+        userState[cat].forEach((item, idx) => {
+          catWeight += item.weight;
+          catCarbs += item.carbs;
+          totalWeight += item.weight;
+          totalCarbs += item.carbs;
+          totalSodium += item.sodium;
+
+          const row = document.createElement('div');
+          row.className = 'item-row';
+          row.innerHTML = `
+            <span><strong>${item.brand}</strong> ${item.name}</span>
+            <span>${item.weight}g ${item.carbs > 0 ? '| ' + item.carbs + 'g CH' : ''} 
+              <button class="remove-btn" onclick="removeItem('${cat}', ${idx})">✕</button>
+            </span>
+          `;
+          listContainer.appendChild(row);
+        });
+
+        // Actualizar badges
+        if (cat === 'nutrition') {
+          document.getElementById(`badge-${cat}`).textContent = `${catWeight}g | ${catCarbs}g CH`;
+        } else {
+          document.getElementById(`badge-${cat}`).textContent = `${catWeight}g`;
         }
       });
 
-      document.getElementById('val-base-weight').textContent = base;
-      document.getElementById('val-total-weight').textContent = total;
+      // Actualizar Barra Fija
+      document.getElementById('total-weight').textContent = `${totalWeight} g`;
+      document.getElementById('total-carbs').textContent = `${totalCarbs} g CH`;
+      document.getElementById('total-sodium').textContent = `${totalSodium} mg`;
     }
 
-    // CÁLCULO DE NUTRICIÓN
-    function calculateNutrition() {
-      const weight = parseFloat(document.getElementById('input-weight').value) || 70;
-      const hours = parseFloat(document.getElementById('input-time').value) || 1;
-
-      // Algoritmo medio de trail running
-      const carbs = Math.min(90, Math.max(30, Math.round(weight * 0.85)));
-      const water = Math.round(weight * 7.5);
-      const sodium = 600;
-
-      document.getElementById('val-carbs').textContent = carbs;
-      document.getElementById('val-water').textContent = water;
-      document.getElementById('val-sodium').textContent = sodium;
-    }
-
-    // AÑADIR ELEMENTO PERSONALIZADO
-    function addNewItemPrompt() {
-      const dict = i18n[currentLang];
-      const name = prompt(dict.promptName);
-      if (!name) return;
-      const weight = parseInt(prompt(dict.promptWeight, "100"));
-      if (isNaN(weight)) return;
-      const isConsumable = confirm(dict.isConsumable);
-
-      const newItem = {
-        id: Date.now(),
-        name: name,
-        weight: weight,
-        category: "bastones",
-        selected: true,
-        consumable: isConsumable
-      };
-
-      items.push(newItem);
-      renderEquipment();
-      calculateWeights();
-    }
-
-    // CAMBIO DE PESTAÑAS
-    function switchTab(tab) {
-      document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-
-      if (tab === 'mochila') {
-        document.getElementById('view-mochila').classList.add('active');
-        document.getElementById('nav-mochila').classList.add('active');
-      } else {
-        document.getElementById('view-nutricion').classList.add('active');
-        document.getElementById('nav-nutricion').classList.add('active');
-      }
-    }
-
-    window.onload = init;
+    init();
   </script>
 </body>
 </html>
